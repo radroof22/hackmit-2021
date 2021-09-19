@@ -1,2 +1,3 @@
 # Hackmit-2021
-HackMIT 2021 Hack
+## Avik Banerjee
+Hello this is our HackMIT 2021 Hack Repo. It contains all the code relating to our project
