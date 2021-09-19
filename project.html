@@ -25,6 +25,9 @@
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
+
+	<script src="https://cdn.plot.ly/plotly-2.4.2.min.js"></script>
+
   </head>
   <body>
     
@@ -49,6 +52,10 @@
 	    </div>
 	  </nav>
     <!-- END nav -->
+    <h1 id="name"></h1>
+    <div id="myDiv">
+      
+    </div>
     
     <section class="hero-wrap hero-wrap-2" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
@@ -332,6 +339,35 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function(){
+      const URL = "https://hackmit2021-backend.azurewebsites.net/patient/1";
+      $.ajax({
+        url:URL,
+        type:"GET",
+        success: function(result){
+          console.log(result)
+          console.log(result.glucoses[0].resource.subject.display)
+          document.getElementById("name").innerText = result.glucoses[0].resource.subject.display
+          if(result != undefined){
+            y = []
+            x = []
+            for(var i = 0; i < result.glucoses.length; i++){
+              x.push(i)
+              y.push(parseInt(result.glucoses[i].resource.text.div))
+            }
+            console.log(y)
+            Plotly.newPlot("myDiv", [{"x": x, "y": y, type: "line"}])
+          }
+        },
+        error:function(error){
+          console.log("Error "+error)
+        }
+      })
+    })
+  </script>
     
   </body>
 </html>
