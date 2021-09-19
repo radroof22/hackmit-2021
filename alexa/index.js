@@ -69,64 +69,26 @@ const askFirstLastName_Handler =  {
         const responseBuilder = handlerInput.responseBuilder;
         let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
-        let say = 'Hello from askFirstLastName. ';
-
+        let say = '';
         let slotStatus = '';
         let resolvedSlot;
 
         let slotValues = getSlotValues(request.intent.slots); 
-        // getSlotValues returns .heardAs, .resolved, and .isValidated for each slot, according to request slot status codes ER_SUCCESS_MATCH, ER_SUCCESS_NO_MATCH, or traditional simple request slot without resolutions
-
-        // console.log('***** slotValues: ' +  JSON.stringify(slotValues, null, 2));
+       
         //   SLOT: firstName 
-        if (slotValues.firstName.heardAs) {
-            slotStatus += ' slot firstName was heard as ' + slotValues.firstName.heardAs + '. ';
+        if (slotValues.firstName.heardAs && slotValues.lastName.heardAs) {
+            slotStatus += 'Hello ' + slotValues.firstName.heardAs + ' ' + slotValues.lastName.heardAs + '. ';
         } else {
-            slotStatus += 'slot firstName is empty. ';
+            slotStatus += 'Please enter/say a valid first and last name.';
         }
-        if (slotValues.firstName.ERstatus === 'ER_SUCCESS_MATCH') {
-            slotStatus += 'a valid ';
-            if(slotValues.firstName.resolved !== slotValues.firstName.heardAs) {
-                slotStatus += 'synonym for ' + slotValues.firstName.resolved + '. '; 
-                } else {
-                slotStatus += 'match. '
-            } // else {
-                //
+        if (slotValues.firstName.ERstatus === 'ER_SUCCESS_MATCH' & slotValues.lastName.ERstatus === 'ER_SUCCESS_MATCH') {
+            slotStatus += 'You are a registered user. Please input your blood glucose value (add the correct unit to your response)';
         }
-        if (slotValues.firstName.ERstatus === 'ER_SUCCESS_NO_MATCH') {
-            slotStatus += 'which did not match any slot value. ';
-            console.log('***** consider adding "' + slotValues.firstName.heardAs + '" to the custom slot type used by slot firstName! '); 
+        if (slotValues.firstName.ERstatus === 'ER_SUCCESS_NO_MATCH' | slotValues.lastName.ERstatus === 'ER_SUCCESS_NO_MATCH') {
+            slotStatus += ' You are not a registered user. Please register.';
         }
-
-        if( (slotValues.firstName.ERstatus === 'ER_SUCCESS_NO_MATCH') ||  (!slotValues.firstName.heardAs) ) {
-            slotStatus += 'A few valid values are, ' + sayArray(getExampleSlotValues('askFirstLastName','firstName'), 'or');
-        }
-        //   SLOT: lastName 
-        if (slotValues.lastName.heardAs) {
-            slotStatus += ' slot lastName was heard as ' + slotValues.lastName.heardAs + '. ';
-        } else {
-            slotStatus += 'slot lastName is empty. ';
-        }
-        if (slotValues.lastName.ERstatus === 'ER_SUCCESS_MATCH') {
-            slotStatus += 'a valid ';
-            if(slotValues.lastName.resolved !== slotValues.lastName.heardAs) {
-                slotStatus += 'synonym for ' + slotValues.lastName.resolved + '. '; 
-                } else {
-                slotStatus += 'match. '
-            } // else {
-                //
-        }
-        if (slotValues.lastName.ERstatus === 'ER_SUCCESS_NO_MATCH') {
-            slotStatus += 'which did not match any slot value. ';
-            console.log('***** consider adding "' + slotValues.lastName.heardAs + '" to the custom slot type used by slot lastName! '); 
-        }
-
-        if( (slotValues.lastName.ERstatus === 'ER_SUCCESS_NO_MATCH') ||  (!slotValues.lastName.heardAs) ) {
-            slotStatus += 'A few valid values are, ' + sayArray(getExampleSlotValues('askFirstLastName','lastName'), 'or');
-        }
-
+        
         say += slotStatus;
-
 
         return responseBuilder
             .speak(say)
@@ -136,8 +98,6 @@ const askFirstLastName_Handler =  {
 };
 
 const askBloodGlucose_Handler =  {
-    this.emit(':ask', 'Hello how can I help')
-    /**
     canHandle(handlerInput) {
         const request = handlerInput.requestEnvelope.request;
         return request.type === 'IntentRequest' && request.intent.name === 'askBloodGlucose' ;
@@ -147,55 +107,78 @@ const askBloodGlucose_Handler =  {
         const responseBuilder = handlerInput.responseBuilder;
         let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
-        let say = 'Hello from askBloodGlucose. ';
-
+        let say = '';
+        
         let slotStatus = '';
         let resolvedSlot;
 
         let slotValues = getSlotValues(request.intent.slots); 
-        // getSlotValues returns .heardAs, .resolved, and .isValidated for each slot, according to request slot status codes ER_SUCCESS_MATCH, ER_SUCCESS_NO_MATCH, or traditional simple request slot without resolutions
-
-        // console.log('***** slotValues: ' +  JSON.stringify(slotValues, null, 2));
+        
         //   SLOT: glucoseVal 
         if (slotValues.glucoseVal.heardAs) {
-            slotStatus += ' slot glucoseVal was heard as ' + slotValues.glucoseVal.heardAs + '. ';
+            slotStatus += '';
         } else {
-            slotStatus += 'slot glucoseVal is empty. ';
+            slotStatus += 'Please enter/say both a glucose value and unit. ';
+            say += slotStatus;
+            return responseBuilder
+                .speak(say)
+                .reprompt('try again, ' + say)
+                .getResponse();
         }
-        if (slotValues.glucoseVal.ERstatus === 'ER_SUCCESS_MATCH') {
-            slotStatus += 'a valid ';
-            if(slotValues.glucoseVal.resolved !== slotValues.glucoseVal.heardAs) {
-                slotStatus += 'synonym for ' + slotValues.glucoseVal.resolved + '. '; 
-                } else {
-                slotStatus += 'match. '
-            } // else {
-                //
-        }
-        if (slotValues.glucoseVal.ERstatus === 'ER_SUCCESS_NO_MATCH') {
-            slotStatus += 'which did not match any slot value. ';
-            console.log('***** consider adding "' + slotValues.glucoseVal.heardAs + '" to the custom slot type used by slot glucoseVal! '); 
-        }
-
-        if( (slotValues.glucoseVal.ERstatus === 'ER_SUCCESS_NO_MATCH') ||  (!slotValues.glucoseVal.heardAs) ) {
-            slotStatus += 'A few valid values are, ' + sayArray(getExampleSlotValues('askBloodGlucose','glucoseVal'), 'or');
-        }
+        
         //   SLOT: glucoseUnit 
         if (slotValues.glucoseUnit.heardAs) {
-            slotStatus += ' slot glucoseUnit was heard as ' + slotValues.glucoseUnit.heardAs + '. ';
+            slotStatus += '';
         } else {
-            slotStatus += 'slot glucoseUnit is empty. ';
+            slotStatus += 'Please enter/say both a glucose value and unit.';
+            say += slotStatus;
+            return responseBuilder
+                .speak(say)
+                .reprompt('try again, ' + say)
+                .getResponse();
         }
         if (slotValues.glucoseUnit.ERstatus === 'ER_SUCCESS_MATCH') {
-            slotStatus += 'a valid ';
-            if(slotValues.glucoseUnit.resolved !== slotValues.glucoseUnit.heardAs) {
-                slotStatus += 'synonym for ' + slotValues.glucoseUnit.resolved + '. '; 
-                } else {
-                slotStatus += 'match. '
-            } // else {
-                //
+            slotStatus += 'Thank you for recording your blood glucose value of ' + slotValues.glucoseVal.heardAs + ' ' + slotValues.glucoseUnit.heardAs + '. This value will be uploaded to the MedSync database.';
+            
+            if (slotValues.glucoseVal.heardAs > 140){
+                slotStatus += ' Please be advised that your blood glucose falls above the healthy range. Excercise at a park is recommended. Your closest options are Lindsey Street Park, Boone Park West, and Vine City Park.';
+                
+            } else if (slotValues.glucoseVal.heardAs < 70){
+                slotStatus += ' Please be advised that your blood glucose falls below the healthy range. Going to a restaurant is recommended. Your closest options are Chick-fil-A, Panera, and McDonalds.';
+            } else {
+                slotStatus += ' Your blood sugar is healthy so there is nothing to worry about!'
+                
+            }
+            slotStatus += ' Thank you for using MedSync!';
+            
+            
+            var http = require("https");
+
+            var options = {
+              "method": "POST",
+              "hostname": "hackmit2021-backend.azurewebsites.net",
+              "port": 443,
+              "path": "/glucose/1/" + slotValues.glucoseVal.heardAs,
+            };
+            
+            var req = http.request(options, function (res) {
+              var chunks = [];
+            
+              res.on("data", function (chunk) {
+                chunks.push(chunk);
+              });
+            
+              res.on("end", function () {
+                var body = Buffer.concat(chunks);
+                console.log(body.toString());
+              });
+            });
+            
+            req.end();
+            
         }
         if (slotValues.glucoseUnit.ERstatus === 'ER_SUCCESS_NO_MATCH') {
-            slotStatus += 'which did not match any slot value. ';
+            slotStatus += 'is invalid. ';
             console.log('***** consider adding "' + slotValues.glucoseUnit.heardAs + '" to the custom slot type used by slot glucoseUnit! '); 
         }
 
@@ -210,9 +193,9 @@ const askBloodGlucose_Handler =  {
             .speak(say)
             .reprompt('try again, ' + say)
             .getResponse();
-    **/
     },
 };
+
 /* *
  * FallbackIntent triggers when a customer says something that doesn’t map to any intents in your skill
  * It must also be defined in the language model (if the locale supports it)
@@ -259,7 +242,7 @@ const IntentReflectorHandler = {
     },
     handle(handlerInput) {
         const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
-        const speakOutput = `What is your blood glucose?`;
+        const speakOutput = `MedSync is the best!`;
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -295,6 +278,8 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
+        askFirstLastName_Handler,
+        askBloodGlucose_Handler,
         HelloWorldIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
@@ -356,7 +341,7 @@ function getExampleSlotValues(intentName, slotName) {
  
     let intents = model.interactionModel.languageModel.intents; 
     for (let i = 0; i < intents.length; i++) { 
-        if (intents[i].name == intentName) { 
+        if (intents[i].name === intentName) { 
             let slots = intents[i].slots; 
             for (let j = 0; j < slots.length; j++) { 
                 if (slots[j].name === slotName) { 
@@ -1059,4 +1044,3 @@ const model = {
     }
   }
 };
-
